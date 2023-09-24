@@ -1,6 +1,6 @@
 'use client';
 
-import { Dropdown } from '@/components';
+import { Dropdown, Modal } from '@/components';
 import { calendarController } from '@/lib/api';
 import styles from '@/styles/Pages/Calendar.module.scss';
 import Link from 'next/link';
@@ -51,6 +51,7 @@ const calendarViews: CalendarViewDropdown[] = [
 ];
 
 function Calendar() {
+  const [newCalendarModal, setNewCalendarModal] = useState(true);
   const [allCalendars, setAllCalendars] = useState<CalendarDropdown[]>([]);
   const [selectedCalendars, setSelectedCalendars] = useState<
     CalendarDropdown[]
@@ -117,6 +118,9 @@ function Calendar() {
         />
       </div>
       {selectedView.id === 'month' && <MonthlyView />}
+      <Modal open={newCalendarModal} onToggle={setNewCalendarModal}>
+        <h1>Create calendar</h1>
+      </Modal>
     </section>
   );
 }
