@@ -1,0 +1,67 @@
+@import '../Variables';
+
+.window {
+    display: flex;
+    position: relative;
+    background: rgba($grey, 0.4);
+    padding: 25px;
+    color: $white;
+    .borders {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        pointer-events: none;
+        user-select: none;
+        .left, .right {
+            aspect-ratio: 1;
+            border: 1px solid $red;
+            height: 100%;
+        }
+        &.outer {
+            top: -10px;
+            right: -10px;
+            bottom: -10px;
+            left: -10px;
+            .left, .right {
+                border: 1px solid $red;
+                max-width: 20%;
+                max-height: 40%;
+            }
+        }
+        &.inner {
+            top: -5px;
+            right: -5px;
+            bottom: -5px;
+            left: -5px;
+            .left, .right {
+                border: 1px solid $white;
+                max-width: 10%;
+                max-height: 20%;
+            }
+        }
+        .top, .bottom {
+            flex: 1;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            .left {
+                border-right: 0;
+            }
+            .right {
+                border-left: 0;
+            }
+        }
+        .top {
+            .left, .right {
+                border-bottom: 0;
+            }
+        }
+        .bottom {
+            align-items: flex-end;
+            .left, .right {
+                border-top: 0;
+            }
+        }
+    }
+}

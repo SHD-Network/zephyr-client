@@ -1,0 +1,9 @@
+$background: #171717;
+$grey: #444444;
+$red: #DA0037;
+$green: #00daa3;
+$white: #EDEDED;
+
+@mixin transition($duration: 0.3s){
+    transition: $duration cubic-bezier(0.645, 0.045, 0.355, 1);
+}

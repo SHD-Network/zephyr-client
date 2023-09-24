@@ -1,0 +1,145 @@
+@import '../Variables';
+
+.messagesLayout {
+    display: flex;
+    flex-direction: row;
+    height: calc(100% - 87px);
+    width: 100%;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba($grey, 0.1);
+    &.empty {
+        flex-direction: column;
+        color: rgba($white, 0.7);
+        p {
+            margin: 10px 0;
+            background: $red;
+            color: $white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            @include transition;
+            cursor: pointer;
+            &:hover {
+                background: $white;
+                color: $red;
+            }
+        }
+        .newMessage {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            .recipients {
+                width: 100%;
+                height: 50px;
+                border-bottom: 1px solid rgba($white, 0.1);
+                box-sizing: border-box;
+                padding: 0 0 0 15px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                position: relative;
+                .searchResults {
+                    position: absolute;
+                    min-width: 200px;
+                    left: 15px;
+                    top: calc(100% - 5px);
+                    background: darken($grey, 10%);
+                    border-radius: 10px;
+                    box-shadow: 0 0 10px 0 rgba(black, 0.1);
+                    overflow: hidden;
+                    padding: 5px;
+                    .result {
+                        width: 100%;
+                        height: 40px;
+                        border-radius: 5px;
+                        color: $white;
+                        cursor: pointer;
+                        @include transition;
+                        display: flex;
+                        align-items: center;
+                        box-sizing: border-box;
+                        padding: 0 10px;
+                        &:hover {
+                            background: darken($red, 5%);
+                        }
+                    }
+                }
+                .chip {
+                    background: rgba($white, 0.1);
+                    color: $white;
+                    height: 30px;
+                    padding: 0 10px 0 15px;
+                    border-radius: 15px;
+                    display: flex;
+                    font-size: 0.9rem;
+                    align-items: center;
+                    gap: 7px;
+                    user-select: none;
+                    .remove {
+                        height: 15px;
+                        width: 15px;
+                        background: rgba($white, 0.3);
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                        @include transition(0.15s);
+                        &:hover {
+                            background: $white;
+                            color: $red;
+                        }
+                    }
+                }
+                input {
+                    border: none;
+                    outline: none;
+                    flex: 1;
+                    height: 100%;
+                }
+            }
+            .messageWindow {
+                flex: 1;
+                width: 100%;
+            }
+            .messageInput {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 5px 10px;
+                textarea {
+                    background: darken($grey, 12%);
+                    width: 100%;
+                    outline: none;
+                    border: none;
+                    height: inherit;
+                    min-height: 50px;
+                    box-sizing: border-box;
+                    resize: none;
+                    border-radius: 5px;
+                    margin: 0;
+                    color: $white;
+                    padding: calc((50px - 1rem) / 2) 0;
+                }
+            }
+        }
+    }
+    .sidebar {
+        width: 300px;
+        height: 100%;
+        background: red;
+        border-radius: 10px 0 0 10px;
+        position: sticky;
+        top: 0;
+    }
+    .content {
+        flex: 1;
+        height: 100%;
+        background: blue;
+        border-radius: 0 10px 10px 0;
+    }
+}

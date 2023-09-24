@@ -1,0 +1,198 @@
+@import '../Variables';
+
+.layout {
+    display: flex;
+    flex-direction: row;
+    color: $white;
+    position: relative;
+    .background {
+        position: fixed;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+    }
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        min-width: 270px;
+        max-width: 270px;
+        background: rgba($white, 0.1);
+        backdrop-filter: blur(20px);
+        height: calc(100vh - 30px);
+        position: sticky;
+        overflow-x: hidden;
+        overflow-y: auto;
+        margin: 15px;
+        border-radius: 15px;
+        z-index: 2;
+        box-shadow: 0 0 15px 0 rgba(black, 0.1);
+        position: relative;
+        .logo {
+            display: flex;
+            background: $red;
+            color: $white;
+            margin: 10px;
+            border-radius: 7px;
+            padding: 12px 15px 10px;
+            font-weight: 100;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 29.5px;
+            user-select: none;
+            cursor: pointer;
+            @include transition;
+            &:hover {
+                background: $white;
+                color: $red;
+            }
+        }
+        .navigations {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex: 1;
+        }
+        .version {
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+            right: 20px;
+            bottom: 20px;
+            margin: 0;
+        }
+        .nav {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            padding: 0;
+            list-style: none;
+            gap: 5px;
+            .navItem {
+                display: flex;
+                flex-direction: row;
+                color: $white;
+                height: 40px;
+                gap: 10px;
+                align-items: center;
+                font-size: 1.1rem;
+                @include transition;
+                box-sizing: border-box;
+                padding: 0 10px;
+                border-radius: 10px;
+                position: relative;
+                &::before {
+                    left: -30px;
+                    top: 15px;
+                    border-radius: 5px;
+                    height: 10px;
+                    width: 10px;
+                    content: '';
+                    position: absolute;
+                    @include transition;
+                    pointer-events: none;
+                }
+                span {
+                    margin-top: 2px;
+                }
+                &.active {
+                    background: rgba($background, 0.5);
+                    &::before {
+                        left: -15px;
+                        background: $red;
+                    }
+                }
+                &:hover {
+                    background: $background;
+                }
+            }
+        }
+    }
+    .content {
+        padding: 15px 0;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        box-sizing: border-box;
+        align-items: flex-start;
+        margin-right: 15px;
+        position: relative;
+        z-index: 2;
+        .titleBar {
+            display: flex;
+            height: 87px;
+            max-width: 100%;
+            background: rgba($background, 0.6);
+            backdrop-filter: blur(20px);
+            filter: saturate(180%);
+            border-radius: 15px;
+            align-items: flex-start;
+            box-sizing: border-box;
+            padding: 15px 25px;
+            flex-direction: column;
+            h1 {
+                margin: 0;
+                font-size: 2rem;
+                font-weight: 700;
+            }
+            .socketStatus {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                gap: 8px;
+                color: rgba($white, 0.7);
+                .indicator {
+                    height: 6px;
+                    width: 6px;
+                    border-radius: 50%;
+                    position: relative;
+                    &::before {
+                        position: absolute;
+                        z-index: -1;
+                        content: '';
+                        height: 100%;
+                        width: 100%;
+                        top: 0;
+                        left: 0;
+                        border-radius: 50%;
+                        animation-name: statusPulse;
+                        animation-duration: 1.3s;
+                        animation-iteration-count: infinite;
+
+                    }
+                    &.online {
+                        background: $green;
+                        &::before {
+                            background: $green;
+                        }
+                    }
+                    &.offline {
+                        background: $red;
+                        &::before {
+                            background: $red;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes statusPulse {
+    0% {
+        opacity: 1;
+        transform: scale(0.99);
+    }
+    90% {
+        opacity: 0;
+        transform: scale(3);
+    }
+    91% {
+        opacity: 0;
+        transform: scale(0.99);
+    }
+}

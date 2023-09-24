@@ -1,0 +1,126 @@
+@import '../Variables';
+
+.setupPage {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        .titleWrapper {
+            animation-name: windowOpen;
+            animation-duration: 0.7s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+            animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+            animation-delay: 0.1s;
+            h1 {
+                color: $white;
+                margin: 0;
+                user-select: none;
+                white-space: nowrap;
+                animation-name: titleAppear;
+                animation-duration: 0.4s;
+                animation-iteration-count: 1;
+                animation-fill-mode: forwards;
+                animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+                animation-delay: 0.3s;
+                opacity: 0;
+                font-weight: 700;
+                font-size: 3rem;
+            }
+        }
+        .buttonWrapper {
+            animation-name: buttonAppear;
+            animation-duration: 0.3s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+            animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+            animation-delay: 0.4s;
+            opacity: 0;
+        }
+    }
+    .form {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 300px;
+        input {
+            height: 40px;
+            padding: 0 15px;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            border: 1px solid rgba($white, 0.6);
+            color: $white;
+            font-size: 1rem;
+        }
+        .toggleMethod {
+            text-align: center;
+            font-size: 0.85rem;
+            opacity: 0.7;
+            padding: 0;
+            margin: 0;
+            margin-top: 7px;
+            cursor: pointer;
+            @include transition;
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+@keyframes windowOpen {
+    0% {
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.4;
+    }
+    30% {
+        opacity: 0.1;
+    }
+    45% {
+        opacity: 0.6;
+    }
+    60% {
+        opacity: 0.4;
+    }
+    75% {
+        opacity: 0.8
+    }
+    85% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes titleAppear {
+    0% {
+        opacity: 0;
+        transform: translate(0, 15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes buttonAppear {
+    0% {
+        opacity: 0;
+        transform: translate(0, -15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}

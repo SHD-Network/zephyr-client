@@ -1,0 +1,172 @@
+@import '../Variables';
+
+.system {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(5, 1fr);
+    margin-top: 25px;
+    box-sizing: border-box;
+    padding: 0 25px;
+    gap: 15px;
+    .currentVersion, .latestVersion {
+        grid-column: span 1;
+        aspect-ratio: 1;
+        background: rgba($grey, 0.2);
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(black, 0.1);
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        h2, p {
+            margin: 0;
+        }
+        h2 {
+            font-size: 2rem;
+        }
+        p {
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+    }
+    .update {
+        grid-column: span 2;
+        background: rgba($grey, 0.2);
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(black, 0.1);
+        padding: 25px;
+    }
+}
+
+.modules {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 0 25px;
+    gap: 10px;
+    margin-top: 25px;
+    .module {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        padding: 10px 15px;
+        border-radius: 15px;
+        &:nth-child(odd){
+            background: rgba($grey, 0.1);
+        }
+        h3 {
+            margin: 0;
+        }
+    }
+}
+
+.users {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 0 25px;
+    gap: 10px;
+    margin-top: 25px;
+    .setting {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        padding: 10px 15px;
+        border-radius: 15px;
+        &:nth-child(odd){
+            background: rgba($grey, 0.1);
+        }
+        h3 {
+            margin: 0;
+        }
+    }
+    .filter {
+        display: flex;
+        flex-direction: row;
+        h3 {
+            margin: 0;
+            padding: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            gap: 10px;
+            &::after {
+                content: '';
+                flex: 1;
+                width: 100%;
+                height: 2px;
+                border-radius: 1px;
+                background: rgba($white, 0.05);
+                position: relative;
+            }
+        }
+    }
+    .table {
+        display: grid;
+        grid-template-columns: repeat(3, auto) calc(35px * 2);
+        gap: 10px;
+        .cell {
+            height: 35px;
+            box-sizing: border-box;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            border-radius: 10px;
+            background: rgba($white, 0.1);
+            overflow: hidden;
+            &.header {
+                background: $red;
+                height: 40px;
+                border-radius: 10px;
+                font-weight: 600;
+            }
+            &.even {
+                background: rgba($white, 0.05);
+            }
+        }
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            height: 35px;
+            border-radius: 10px;
+            background: rgba($white, 0.1);
+            overflow: hidden;
+            &.header {
+                background: $red;
+            }
+            &.even {
+                background: rgba($white, 0.05);
+            }
+            .button {
+                height: 35px;
+                width: 35px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                @include transition(.2s);
+                position: relative;
+                &:hover {
+                    background: rgba($red, 0.7);
+                }
+            }
+        }
+    }
+}
+
+.user {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 0 25px;
+    gap: 10px;
+    margin-top: 25px;
+}

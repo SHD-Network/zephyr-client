@@ -1,0 +1,28 @@
+@import '../Variables';
+
+.toggle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: rgba($grey, 0.3);
+    height: 30px;
+    width: 60px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    padding: 5px;
+    cursor: pointer;
+    .middle {
+        background: rgba($grey, 0.4);
+        height: 20px;
+        width: 30px;
+        border-radius: 10px;
+        pointer-events: none;
+        @include transition;
+    }
+    &.active {
+        .middle {
+            margin-left: 20px;
+            background: $red;
+        }
+    }
+}

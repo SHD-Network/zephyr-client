@@ -1,0 +1,66 @@
+@import './Variables';
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: $background;
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .leaflet-bottom.leaflet-right {
+        display: none;
+    }
+}
+input {
+    height: 40px;
+    padding: 0 15px;
+    background: transparent;
+    outline: none;
+    font-family: inherit;
+    border: 1px solid rgba($white, 0.6);
+    color: $white;
+    font-size: 1rem;
+}
+textarea {
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.map-pin {
+    .safehouse {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 3px solid $red;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        &::before, &::after {
+            content: '';
+            position: absolute;
+            height: 3px;
+            background: $red;
+            width: 70%;
+            border-radius: calc(3px / 2);
+        }
+        &::before {
+            top: 40%;
+            left: -2px;
+            transform: translate(0, -50%) rotate(-25deg);
+        }
+        &::after {
+            top: 60%;
+            transform: translate(0, -50%) rotate(-25deg);
+            right: -2px;
+        }
+        span {
+            position: absolute;
+        }
+    }
+}
+
+.map-tooltip {
+    background: green;
+}

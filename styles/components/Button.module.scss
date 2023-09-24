@@ -1,0 +1,30 @@
+@import '../Variables';
+
+.button {
+    display: flex;
+    outline: none;
+    border: 0;
+    background: $white;
+    color: $background;
+    font-family: inherit;
+    padding: 15px 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    @include transition;
+    &:hover, &:focus {
+        background: $red;
+        color: $white;
+        transform: scale(0.95);
+    }
+    &.left {
+        flex-direction: row;
+    }
+    &.right {
+        flex-direction: row-reverse;
+    }
+}

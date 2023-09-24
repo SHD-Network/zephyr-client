@@ -1,0 +1,76 @@
+@import '../Variables.scss';
+
+.dropdown {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 40px;
+    .selected {
+        height: 40px;
+        background: lighten($background, 7%);
+        border-radius: 10px;
+        box-sizing: border-box;
+        padding: 0 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        position: relative;
+        z-index: 10;
+        overflow: hidden;
+        user-select: none;
+        @include transition;
+        .chevron {
+            display: flex;
+            align-items: center;
+            @include transition;
+        }
+    }
+    .options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        opacity: 0;
+        pointer-events: none;
+        user-select: none;
+        @include transition;
+        z-index: 9;
+        background: lighten($background, 7%);
+        margin-top: -10px;
+        box-sizing: border-box;
+        padding: 10px 8px;
+        border-radius: 0 0 10px 10px;
+        border-top: 1px solid $grey;
+        list-style: none;
+        li {
+            cursor: pointer;
+            padding: 5px 7px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            @include transition;
+            color: $white;
+            span {
+                display: flex;
+            }
+            &:hover {
+                background: rgba($grey, 0.6)
+            }
+        }
+    }
+    &.open {
+        .selected {
+            .chevron {
+                transform: rotate(180deg);
+            }
+            border-radius: 10px 10px 0 0;
+        }
+        .options {
+            opacity: 1;
+            pointer-events: all;
+            margin-top: 0;
+        }
+    }
+}

@@ -1,0 +1,30 @@
+@import '../Variables';
+
+.settingsLayout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .chips {
+        display: flex;
+        flex-direction: row;
+        margin: 0 25px;
+        gap: 10px;
+        .chip {
+            height: 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+            background: rgba($grey, 0.5);
+            cursor: pointer;
+            @include transition;
+            &:hover {
+                background: rgba($grey, 1);
+            }
+            &.active {
+                background: $red;
+            }
+        }
+    }
+}
