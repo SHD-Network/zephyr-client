@@ -1,10 +1,11 @@
 'use client';
 
-import { Dropdown } from '@/components';
+import { Dropdown, Modal } from '@/components';
 import { calendarController } from '@/lib/api';
 import styles from '@/styles/Pages/Calendar.module.scss';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { TbCalendarPlus, TbPlus } from 'react-icons/tb';
 import useSWR from 'swr';
 
 function getWeek(thisDate: Date) {
@@ -22,6 +23,21 @@ function getWeek(thisDate: Date) {
   if (R !== 0) return Math.ceil(Q);
   else return Q;
 }
+
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
 
 type CalendarDropdown = {
   id: string;
@@ -51,6 +67,8 @@ const calendarViews: CalendarViewDropdown[] = [
 ];
 
 function Calendar() {
+  const [newCalendarModal, setNewCalendarModal] = useState(false);
+  const [newEventModal, setNewEventModal] = useState(false);
   const [allCalendars, setAllCalendars] = useState<CalendarDropdown[]>([]);
   const [selectedCalendars, setSelectedCalendars] = useState<
     CalendarDropdown[]
@@ -62,6 +80,8 @@ function Calendar() {
   const { data: calendars } = useSWR(calendarController.SWR.listCalendars, () =>
     calendarController.listCalendars(),
   );
+
+  const [now, setNow] = useState(new Date());
 
   useEffect(() => {
     if (calendars === undefined) {
@@ -87,43 +107,119 @@ function Calendar() {
     setAllCalendars([...ownCalendars, ...sharedCalendars]);
   }, [calendars]);
 
+  async function createCalendar(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const calendarName = e.target[0].value;
+    const calendarColor = e.target[1].value;
+
+    if (
+      calendarName === '' ||
+      calendarName === undefined ||
+      calendarName === null
+    ) {
+      throw new Error('Calendar name is empty');
+    }
+
+    if (
+      calendarColor === '' ||
+      calendarColor === undefined ||
+      calendarColor === null
+    ) {
+      throw new Error('Calendar color is empty');
+    }
+
+    await calendarController.createCalendar(calendarName, calendarColor);
+  }
+
   return (
     <section className={styles.calendarPage}>
       <div className={styles.tabBar}>
-        <Dropdown<CalendarDropdown>
-          options={allCalendars}
-          value={selectedCalendars}
-          setValue={(value) => {
-            setSelectedCalendars(Array.isArray(value) ? [...value] : [value]);
-          }}
-          multiple
-          labelKey="name"
-          valueKey="id"
-          width={300}
-          placeholder="Calendars"
-          checkmarks
-          forcePlaceholder
-        />
-        <Dropdown<CalendarViewDropdown>
-          options={calendarViews}
-          value={selectedView}
-          setValue={(value) => {
-            setSelectedView(Array.isArray(value) ? value[0] : value);
-          }}
-          labelKey="name"
-          valueKey="id"
-          placeholder="View"
-          width={150}
-        />
+        <div className={styles.left}>
+          {allCalendars.length > 0 && (
+            <Dropdown<CalendarDropdown>
+              options={allCalendars}
+              value={selectedCalendars}
+              setValue={(value) => {
+                setSelectedCalendars(
+                  Array.isArray(value) ? [...value] : [value],
+                );
+              }}
+              multiple
+              labelKey="name"
+              valueKey="id"
+              width={300}
+              placeholder="Calendars"
+              checkmarks
+              forcePlaceholder
+            />
+          )}
+          <button onClick={() => setNewCalendarModal(true)}>
+            <TbPlus />
+            Create calendar
+          </button>
+          {allCalendars.length > 0 && (
+            <button onClick={() => setNewEventModal(true)}>
+              <TbCalendarPlus />
+              Create event
+            </button>
+          )}
+          {/* <Dropdown<CalendarViewDropdown>
+            options={calendarViews}
+            value={selectedView}
+            setValue={(value) => {
+              setSelectedView(Array.isArray(value) ? value[0] : value);
+            }}
+            labelKey="name"
+            valueKey="id"
+            placeholder="View"
+            width={150}
+          /> */}
+        </div>
+        <div className={styles.right}>
+          <h2>
+            {months[now.getMonth()]}
+            <span>{now.getFullYear()}</span>
+          </h2>
+        </div>
       </div>
-      {selectedView.id === 'month' && <MonthlyView />}
+      {selectedView.id === 'month' && <MonthlyView date={now} />}
+      <Modal open={newCalendarModal} onToggle={setNewCalendarModal}>
+        <h1>Create calendar</h1>
+        <form onSubmit={createCalendar}>
+          <input type="text" placeholder="Calendar name" />
+          <section>
+            <span>Calendar colour</span>
+            <input type="color" defaultValue="#DA0037" />
+          </section>
+          <button type="submit">Create</button>
+        </form>
+      </Modal>
+      <Modal open={newEventModal} onToggle={setNewEventModal}>
+        <h1>Create event</h1>
+        <form>
+          <Dropdown<CalendarDropdown>
+            options={allCalendars}
+            value={selectedCalendars}
+            setValue={(value) => {
+              setSelectedCalendars(Array.isArray(value) ? [...value] : [value]);
+            }}
+            labelKey="name"
+            valueKey="id"
+            width={300}
+            placeholder="Calendars"
+          />
+        </form>
+      </Modal>
     </section>
   );
 }
 
-function MonthlyView() {
-  const now = new Date();
-  const thisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+type CalendarViewProps = {
+  date: Date;
+};
+
+function MonthlyView({ date }: CalendarViewProps) {
+  const thisMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
   const daysInMonth = thisMonth.getDate();
   const numOfWeeks = getWeek(thisMonth);
 
@@ -152,7 +248,7 @@ function MonthlyView() {
       {[...Array(daysInMonth)].map((_, i) => (
         <MonthlyDate
           key={i}
-          date={new Date(now.getFullYear(), now.getMonth(), i + 1)}
+          date={new Date(date.getFullYear(), date.getMonth(), i + 1)}
         />
       ))}
     </div>
