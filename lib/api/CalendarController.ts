@@ -14,6 +14,19 @@ class CalendarController extends ApiController {
 
     return response;
   }
+
+  public async createCalendar(name: string, color: string) {
+    const response = await this.post<any>('calendar', {
+      name,
+      color,
+    });
+
+    if (response.status !== 200) {
+      throw new Error(response.message);
+    }
+
+    return response;
+  }
 }
 
 export const calendarController = new CalendarController();

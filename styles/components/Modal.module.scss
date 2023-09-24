@@ -34,15 +34,56 @@
         padding: 15px;
         border-radius: 10px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        min-width: 300px;
+        min-width: 350px;
         opacity: 0;
         margin-top: 20px;
         @include transition;
         h1 {
             margin: 0;
+            border-bottom: 1px solid $grey;
+            padding-bottom: 5px;
         }
         p {
             margin: 0;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-top: 10px;
+            gap: 5px;
+            section {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                width: 100%;
+                gap: 10px;
+            }
+            input {
+                border-radius: 5px;
+                border: 1px solid lighten($background, 25%);
+                &[type="color"] {
+                    padding: 0;
+                    border: 0;
+                }
+            }
+            button {
+                height: 40px;
+                border-radius: 5px;
+                background: transparent;
+                color: $white;
+                outline: none;
+                border: 1px solid lighten($background, 25%);
+                margin-top: 10px;
+                font-family: inherit;
+                font-size: 1rem;
+                cursor: pointer;
+                @include transition;
+                &:hover {
+                    background: $red;
+                    border-color: darken($red, 20%);
+                }
+            }
         }
     }
     &.open {
