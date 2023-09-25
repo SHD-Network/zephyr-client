@@ -17,7 +17,7 @@ function CalendarLayout({ children }: DefconLayoutProps) {
     loadPage();
   }, [loadPage]);
 
-  return <>{children}</>;
+  return children;
 }
 
 export default CalendarLayout;

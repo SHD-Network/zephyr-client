@@ -1,14 +1,24 @@
 'use client';
-import { Toggle } from '@/components';
 import { userController } from '@/lib/api';
 import { statusController } from '@/lib/api/StatusController';
-import styles from '@/styles/Pages/Admin.module.scss';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { TbEye, TbPencil } from 'react-icons/tb';
 import { ListUsersResponse } from '@/@types/lib/api/UserControllerTypes';
+import {
+  ActionIcon,
+  Divider,
+  Flex,
+  Stack,
+  Switch,
+  Table,
+  Title,
+  Tooltip,
+} from '@mantine/core';
+import { useClipboard } from '@mantine/hooks';
 
 function Users() {
+  const clipboard = useClipboard({ timeout: 500 });
   const [settings, setSettings] = useState({
     allowInvite: false,
     allowRegistration: false,
@@ -43,7 +53,7 @@ function Users() {
   }, [loadPage]);
 
   return (
-    <section className={styles.users}>
+    <Stack>
       <Setting
         name="Allow registration invites"
         keyValue="allowInvite"
@@ -56,59 +66,80 @@ function Users() {
         status={settings.allowRegistration}
         onChange={updateSettings}
       />
-      <div className={styles.filter}>
-        <h3>All users</h3>
-      </div>
-      <div className={styles.table}>
-        <div className={`${styles.cell} ${styles.header}`}>User ID</div>
-        <div className={`${styles.cell} ${styles.header}`}>Username</div>
-        <div className={`${styles.cell} ${styles.header}`}>Email</div>
-        <div className={`${styles.buttons} ${styles.header}`}></div>
-        {allUsers?.users.map((user, index) => {
-          return (
-            <>
-              <div
-                className={`${styles.cell} ${
-                  index % 2 === 0 ? styles.even : ''
-                }`}
-              >
-                {user.id}
-              </div>
-              <div
-                className={`${styles.cell} ${
-                  index % 2 === 0 ? styles.even : ''
-                }`}
-              >
-                {user.username}
-              </div>
-              <div
-                className={`${styles.cell} ${styles.hidden} ${
-                  index % 2 === 0 ? styles.even : ''
-                }`}
-              >
-                <span>{user.email}</span>
-              </div>
-              <div
-                className={`${styles.buttons} ${
-                  index % 2 === 0 ? styles.even : ''
-                }`}
-              >
-                <Link href={`/admin/users/${user.id}`}>
-                  <div className={styles.button}>
-                    <TbEye />
-                  </div>
-                </Link>
-                <Link href={`/admin/users/${user.id}/edit`}>
-                  <div className={styles.button}>
-                    <TbPencil />
-                  </div>
-                </Link>
-              </div>
-            </>
-          );
-        })}
-      </div>
-    </section>
+      <Divider />
+      <Flex align="center" justify="space-between">
+        <Title order={3}>All users</Title>
+      </Flex>
+      <Table striped>
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th>User ID</Table.Th>
+            <Table.Th>Username</Table.Th>
+            <Table.Th>Email</Table.Th>
+            <Table.Th />
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>
+          {allUsers?.users.map((user, index) => {
+            return (
+              <Table.Tr key={index}>
+                <Tooltip
+                  position="top-start"
+                  label={clipboard.copied ? 'Copied!' : 'Click to copy'}
+                >
+                  <Table.Td
+                    onClick={() => clipboard.copy(user.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {user.id}
+                  </Table.Td>
+                </Tooltip>
+                <Tooltip
+                  position="top-start"
+                  label={clipboard.copied ? 'Copied!' : 'Click to copy'}
+                >
+                  <Table.Td
+                    onClick={() => clipboard.copy(user.username)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {user.username}
+                  </Table.Td>
+                </Tooltip>
+                <Tooltip
+                  position="top-start"
+                  label={clipboard.copied ? 'Copied!' : 'Click to copy'}
+                >
+                  <Table.Td
+                    onClick={() => clipboard.copy(user.email)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {user.email}
+                  </Table.Td>
+                </Tooltip>
+                <Table.Td>
+                  <Flex align="center" style={{ gap: '5px' }}>
+                    <Tooltip label="View user">
+                      <Link href={`/admin/users/${user.id}`}>
+                        <ActionIcon>
+                          <TbEye />
+                        </ActionIcon>
+                      </Link>
+                    </Tooltip>
+                    <Tooltip label="Edit user">
+                      <Link href={`/admin/users/${user.id}/edit`}>
+                        <ActionIcon>
+                          <TbPencil />
+                        </ActionIcon>
+                      </Link>
+                    </Tooltip>
+                  </Flex>
+                </Table.Td>
+              </Table.Tr>
+            );
+          })}
+        </Table.Tbody>
+      </Table>
+    </Stack>
   );
 }
 
@@ -121,10 +152,10 @@ type SettingProps = {
 
 function Setting({ name, status, onChange, keyValue }: SettingProps) {
   return (
-    <div className={styles.setting}>
-      <h3>{name}</h3>
-      <Toggle value={status} onChange={() => onChange(keyValue, !status)} />
-    </div>
+    <Flex align="center" gap="md">
+      <Title order={4}>{name}</Title>
+      <Switch checked={status} onChange={() => onChange(keyValue, !status)} />
+    </Flex>
   );
 }
 

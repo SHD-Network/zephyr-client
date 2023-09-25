@@ -29,8 +29,21 @@ import { authController, setupController, userController } from '@/lib/api';
 import { useAppSettings, usePageSettings, useUserSettings } from '@/redux';
 import { statusController } from '@/lib/api/StatusController';
 import useSWR from 'swr';
-
-const font = Oxanium({ subsets: ['latin'] });
+import {
+  AppShell,
+  Badge,
+  Box,
+  Burger,
+  Center,
+  Flex,
+  Group,
+  Loader,
+  NavLink,
+  ScrollArea,
+  Title,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import Link from 'next/link';
 
 export type Modules = {
   calendar: boolean;
@@ -59,7 +72,6 @@ function Layout({ children }: LayoutProps) {
     'dashboard' | 'setup' | 'login' | 'loading'
   >('loading');
   const title = usePageSettings((state) => state.title);
-  const socketStatus = usePageSettings((state) => state.socketStatus);
   const isAdmin = useUserSettings((state) => state.isAdmin);
   const setIsAdmin = useUserSettings((state) => state.setIsAdmin);
   const setRole = useUserSettings((state) => state.setRole);
@@ -177,176 +189,208 @@ function Layout({ children }: LayoutProps) {
     loadPage();
   }, [pathname, loadPage]);
 
-  // useEffect(() => {
-  //   messageController.init();
-  // }, []);
+  const [opened, { toggle }] = useDisclosure();
 
   return (
-    <html lang="en">
-      <body className={font.className}>
-        {layout === 'loading' ? (
-          <main>hello world</main>
-        ) : layout === 'setup' ? (
-          <main>{children}</main>
-        ) : layout === 'login' ? (
-          <main>{children}</main>
-        ) : (
-          <main>
-            <div className={styles.layout}>
-              <div className={styles.background} />
-              <div className={styles.sidebar}>
-                <div className={styles.logo}>Zephyr</div>
-                <div className={styles.navigations}>
-                  <ul className={styles.nav}>
-                    <NavigationItem
-                      href="/"
-                      label="Dashboard"
-                      icon={<TbLayoutGrid size={20} />}
-                    />
-                    {modules.news ? (
-                      <NavigationItem
-                        href="/news"
-                        label="News"
-                        icon={<TbNews size={20} />}
-                      />
-                    ) : null}
-                    {modules.messages ? (
-                      <NavigationItem
-                        href="/messages"
-                        label="Messages"
-                        icon={<TbMessages size={20} />}
-                      />
-                    ) : null}
-                    {modules.calendar ? (
-                      <NavigationItem
-                        href="/calendar"
-                        label="Calendar"
-                        icon={<TbCalendar size={20} />}
-                      />
-                    ) : null}
-                    {modules.mail ? (
-                      <NavigationItem
-                        href="/mail"
-                        label="Mail"
-                        icon={<TbMail size={20} />}
-                      />
-                    ) : null}
-                    {modules.maps && (
-                      <NavigationItem
-                        href="/maps"
-                        label="Maps"
-                        icon={<TbMap size={20} />}
-                      />
-                    )}
-                    {modules.inventory ? (
-                      <NavigationItem
-                        href="/inventory"
-                        label="Inventory"
-                        icon={<TbClipboardList size={20} />}
-                      />
-                    ) : null}
-                    {modules.documents ? (
-                      <NavigationItem
-                        href="/documents"
-                        label="Documents"
-                        icon={<TbFiles size={20} />}
-                      />
-                    ) : null}
-                    {modules.crops ? (
-                      <NavigationItem
-                        href="/crops"
-                        label="Crops"
-                        icon={<TbPlant size={20} />}
-                      />
-                    ) : null}
-                    {modules.defcon ? (
-                      <NavigationItem
-                        href="/defcon"
-                        label="DEFCON"
-                        icon={<TbAlertOctagon size={20} />}
-                      />
-                    ) : null}
-                    {modules.pricing ? (
-                      <NavigationItem
-                        href="/pricing"
-                        label="Live Pricing"
-                        icon={<TbChartLine size={20} />}
-                      />
-                    ) : null}
-                    {modules.wiki ? (
-                      <NavigationItem
-                        href="/wiki"
-                        label="Wiki"
-                        icon={<TbNotebook size={20} />}
-                      />
-                    ) : null}
-                    {modules.home_monitoring ? (
-                      <NavigationItem
-                        href="/home"
-                        label="Home Monitoring"
-                        icon={<TbHomeBolt size={20} />}
-                      />
-                    ) : null}
-                    {modules.security ? (
-                      <NavigationItem
-                        href="/security"
-                        label="Security"
-                        icon={<TbHomeShield size={20} />}
-                      />
-                    ) : null}
-                  </ul>
-                  <ul className={styles.nav}>
-                    {!isAdmin ? null : (
-                      <NavigationItem
-                        href="/admin"
-                        label="Admin"
-                        icon={<TbShield size={20} />}
-                      />
-                    )}
-                    <NavigationItem
-                      href="/account"
-                      label="Your account"
-                      icon={<TbUserCircle size={20} />}
-                    />
-                    <NavigationItem
-                      href="/settings"
-                      label="Settings"
-                      icon={<TbSettings size={20} />}
-                    />
-                    <NavigationItem
-                      href="/logout"
-                      label="Logout"
-                      icon={<TbLogout size={20} />}
-                    />
-                  </ul>
-                </div>
-                {version === '' ? null : (
-                  <p className={styles.version}>v{version}</p>
+    <>
+      {layout === 'loading' ? (
+        <Center mih="100vh">
+          <Loader />
+        </Center>
+      ) : layout === 'setup' ? (
+        <main>{children}</main>
+      ) : layout === 'login' ? (
+        <main>{children}</main>
+      ) : (
+        <AppShell
+          header={{ height: 60 }}
+          navbar={{
+            width: 250,
+            breakpoint: 'sm',
+            collapsed: { mobile: !opened },
+          }}
+          padding="md"
+        >
+          <AppShell.Header>
+            <Flex direction="row" align="center" h="100%">
+              <Group h="100%" px="md" w={250}>
+                <Burger
+                  opened={opened}
+                  onClick={toggle}
+                  hiddenFrom="sm"
+                  size="sm"
+                />
+                <Box
+                  bg="red.8"
+                  component="div"
+                  h="60%"
+                  display="flex"
+                  px="md"
+                  visibleFrom="sm"
+                  style={{
+                    alignItems: 'center',
+                    textTransform: 'uppercase',
+                    userSelect: 'none',
+                  }}
+                >
+                  <span
+                    style={{
+                      color: '#ffffff',
+                      fontSize: '1.2rem',
+                      letterSpacing: '15px',
+                      marginRight: '-15px',
+                    }}
+                  >
+                    Zephyr
+                  </span>
+                </Box>
+              </Group>
+              <Group px="md">
+                {title !== '' && (
+                  <Title order={1} size="h2" style={{ paddingTop: '3px' }}>
+                    {title}
+                  </Title>
                 )}
-              </div>
-              <div className={styles.content}>
-                {title === '' ? null : (
-                  <div className={styles.titleBar}>
-                    <h1>{title}</h1>
-                    {socketStatus === null ? null : (
-                      <div className={styles.socketStatus}>
-                        <div
-                          className={`${styles.indicator} ${
-                            socketStatus ? styles.online : styles.offline
-                          }`}
-                        />
-                        {socketStatus ? 'Connected' : 'Disconnected'}
-                      </div>
-                    )}
-                  </div>
+              </Group>
+            </Flex>
+          </AppShell.Header>
+          <AppShell.Navbar p="md">
+            <Flex direction="column" justify="space-between" h="100%">
+              <Flex direction="column">
+                <NavigationItem
+                  href="/"
+                  label="Dashboard"
+                  icon={<TbLayoutGrid size={20} />}
+                />
+                {modules.news && (
+                  <NavigationItem
+                    href="/news"
+                    label="News"
+                    icon={<TbNews size={20} />}
+                  />
                 )}
-                {children}
-              </div>
-            </div>
-          </main>
-        )}
-      </body>
-    </html>
+                {modules.messages && (
+                  <NavigationItem
+                    href="/messages"
+                    label="Messages"
+                    icon={<TbMessages size={20} />}
+                  />
+                )}
+                {modules.calendar && (
+                  <NavigationItem
+                    href="/calendar"
+                    label="Calendar"
+                    icon={<TbCalendar size={20} />}
+                  />
+                )}
+                {modules.mail && (
+                  <NavigationItem
+                    href="/mail"
+                    label="Mail"
+                    icon={<TbMail size={20} />}
+                  />
+                )}
+                {modules.maps && (
+                  <NavigationItem
+                    href="/maps"
+                    label="Maps"
+                    icon={<TbMap size={20} />}
+                  />
+                )}
+                {modules.inventory && (
+                  <NavigationItem
+                    href="/inventory"
+                    label="Inventory"
+                    icon={<TbClipboardList size={20} />}
+                  />
+                )}
+                {modules.documents && (
+                  <NavigationItem
+                    href="/documents"
+                    label="Documents"
+                    icon={<TbFiles size={20} />}
+                  />
+                )}
+                {modules.crops && (
+                  <NavigationItem
+                    href="/crops"
+                    label="Crops"
+                    icon={<TbPlant size={20} />}
+                  />
+                )}
+                {modules.defcon && (
+                  <NavigationItem
+                    href="/defcon"
+                    label="DEFCON"
+                    icon={<TbAlertOctagon size={20} />}
+                  />
+                )}
+                {modules.pricing && (
+                  <NavigationItem
+                    href="/pricing"
+                    label="Live Pricing"
+                    icon={<TbChartLine size={20} />}
+                  />
+                )}
+                {modules.wiki && (
+                  <NavigationItem
+                    href="/wiki"
+                    label="Wiki"
+                    icon={<TbNotebook size={20} />}
+                  />
+                )}
+                {modules.home_monitoring && (
+                  <NavigationItem
+                    href="/home"
+                    label="Home Monitoring"
+                    icon={<TbHomeBolt size={20} />}
+                  />
+                )}
+                {modules.security && (
+                  <NavigationItem
+                    href="/security"
+                    label="Security"
+                    icon={<TbHomeShield size={20} />}
+                  />
+                )}
+              </Flex>
+              <Flex direction="column">
+                {isAdmin && (
+                  <NavigationItem
+                    href="/admin"
+                    label="Admin"
+                    icon={<TbShield size={20} />}
+                  />
+                )}
+                <NavigationItem
+                  href="/account"
+                  label="Your account"
+                  icon={<TbUserCircle size={20} />}
+                />
+                <NavigationItem
+                  href="/settings"
+                  label="Settings"
+                  icon={<TbSettings size={20} />}
+                />
+                <NavigationItem
+                  href="/logout"
+                  label="Logout"
+                  icon={<TbLogout size={20} />}
+                />
+                {version !== '' && (
+                  <NavLink
+                    label={`v${version}`}
+                    disabled
+                    rightSection={<Badge>Update available</Badge>}
+                  />
+                )}
+              </Flex>
+            </Flex>
+          </AppShell.Navbar>
+          <AppShell.Main>{children}</AppShell.Main>
+        </AppShell>
+      )}
+    </>
   );
 }
 

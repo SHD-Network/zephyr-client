@@ -1,5 +1,25 @@
 @import '../Variables';
 
+.logo {
+    display: flex;
+    background: $red;
+    color: $white;
+    margin: 10px;
+    border-radius: 7px;
+    padding: 12px 15px 10px;
+    font-weight: 100;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 29.5px;
+    user-select: none;
+    cursor: pointer;
+    @include transition;
+    &:hover {
+        background: $white;
+        color: $red;
+    }
+}
+
 .layout {
     display: flex;
     flex-direction: row;
@@ -29,25 +49,7 @@
         z-index: 2;
         box-shadow: 0 0 15px 0 rgba(black, 0.1);
         position: relative;
-        .logo {
-            display: flex;
-            background: $red;
-            color: $white;
-            margin: 10px;
-            border-radius: 7px;
-            padding: 12px 15px 10px;
-            font-weight: 100;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 29.5px;
-            user-select: none;
-            cursor: pointer;
-            @include transition;
-            &:hover {
-                background: $white;
-                color: $red;
-            }
-        }
+        
         .navigations {
             display: flex;
             flex-direction: column;

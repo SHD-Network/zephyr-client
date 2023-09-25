@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import styles from '@/styles/Layouts/Layout.module.scss';
+import { NavLink } from '@mantine/core';
 
 type NavigationItemProps = {
   icon: JSX.Element;
@@ -41,10 +42,7 @@ export default function NavigationItem({
 
   return (
     <Link href={href}>
-      <li className={`${styles.navItem} ${isActive ? styles.active : ''}`}>
-        {icon}
-        <span>{label}</span>
-      </li>
+      <NavLink label={label} active={isActive} leftSection={icon} />
     </Link>
   );
 }

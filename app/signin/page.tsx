@@ -1,6 +1,5 @@
 'use client';
 
-import { Button, Window } from '@/components';
 import styles from '@/styles/Pages/Login.module.scss';
 import { get } from '@github/webauthn-json';
 import { useEffect, useState } from 'react';
@@ -8,11 +7,20 @@ import { useRouter } from 'next/navigation';
 import { authController } from '@/lib/api';
 import { statusController } from '@/lib/api/StatusController';
 import Link from 'next/link';
+import {
+  Button,
+  Center,
+  Container,
+  Flex,
+  Loader,
+  PasswordInput,
+  TextInput,
+} from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { TbAt } from 'react-icons/tb';
 
 function Login() {
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const router = useRouter();
   const [authMethods, setAuthMethods] = useState<{
     password: boolean;
@@ -38,11 +46,7 @@ function Login() {
     return;
   }
 
-  async function checkAuthMethods(e?: React.FormEvent) {
-    if (e) {
-      e.preventDefault();
-    }
-
+  async function checkAuthMethods(username: string) {
     try {
       const authMethods = await authController.authMethods(username);
       setAuthMethods({
@@ -51,18 +55,14 @@ function Login() {
       });
 
       if (!authMethods.password && authMethods.passkey) {
-        signinWithPasskey();
+        signinWithPasskey(username);
       }
     } catch (error) {
       console.error(error);
     }
   }
 
-  async function signinWithPasskey(e?: React.FormEvent) {
-    if (e) {
-      e.preventDefault();
-    }
-
+  async function signinWithPasskey(username: string) {
     setSigninPending(true);
 
     const challenge = await authController.generateChallenge();
@@ -81,11 +81,7 @@ function Login() {
     }
   }
 
-  async function signinWithPassword(e?: React.FormEvent) {
-    if (e) {
-      e.preventDefault();
-    }
-
+  async function signinWithPassword(username: string, password: string) {
     setSigninPending(true);
 
     try {
@@ -105,64 +101,111 @@ function Login() {
     checkRegistration();
   }, []);
 
+  const form = useForm({
+    initialValues: {
+      username: '',
+      password: '',
+    },
+  });
+
+  function formSubmit(values: { username: string; password: string }) {
+    if (authMethods === null) {
+      checkAuthMethods(values.username);
+      return;
+    }
+
+    if (authMethods.password && values.password !== '') {
+      signinWithPassword(values.username, values.password);
+      return;
+    }
+  }
+
   return (
-    <section className={styles.loginPage}>
-      <Window>
-        {isAvailable === null ? (
-          <div />
-        ) : (
-          <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.currentTarget.value)}
-            />
-            {authMethods?.password ? (
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.currentTarget.value)}
+    <Container size="md">
+      <Center mih="100vh">
+        {isAvailable === null && <Loader />}
+        {isAvailable !== null && (
+          <form onSubmit={form.onSubmit((values) => formSubmit(values))}>
+            <Flex direction="column" justify="center" w={300} gap="xs">
+              <TextInput
+                withAsterisk
+                label="Your username"
+                leftSection={<TbAt />}
+                leftSectionPointerEvents="none"
+                {...form.getInputProps('username')}
               />
-            ) : null}
-            {signinPending ? (
-              <Button pending={true} />
-            ) : authMethods === null ||
-              (isAvailable && authMethods.passkey && !authMethods.password) ? (
-              <Button
-                label={
-                  authMethods === null ? 'Sign in' : 'Sign in with passkey'
-                }
-                onClick={checkAuthMethods}
-              />
-            ) : (authMethods.password && !authMethods.passkey) ||
-              !isAvailable ? (
-              <Button
-                label="Sign in with password"
-                onClick={signinWithPassword}
-              />
-            ) : authMethods.password && authMethods.passkey && isAvailable ? (
-              <div className={styles.buttons}>
-                <Button
-                  label="Sign in with passkey"
-                  onClick={signinWithPasskey}
+              {authMethods?.password && (
+                <PasswordInput
+                  withAsterisk
+                  label="Your password"
+                  {...form.getInputProps('password')}
                 />
-                <Button
-                  label="Sign in with password"
-                  onClick={signinWithPassword}
-                />
-              </div>
-            ) : null}
-            {!registrationEnabled ? null : (
-              <Link href="/signup">
-                <p>Don&apos;t have an account? Sign up</p>
-              </Link>
-            )}
+              )}
+              {signinPending && (
+                <Button fullWidth loading type="submit"></Button>
+              )}
+              {!signinPending && authMethods === null && (
+                <Button fullWidth type="submit">
+                  Continue
+                </Button>
+              )}
+              {!signinPending && isAvailable && authMethods?.passkey && (
+                <Button fullWidth type="submit">
+                  Sign in with passkey
+                </Button>
+              )}
+              {!signinPending && authMethods?.password && (
+                <Button fullWidth type="submit">
+                  Sign in with password
+                </Button>
+              )}
+            </Flex>
           </form>
         )}
-      </Window>
-    </section>
+      </Center>
+    </Container>
+    // <section className={styles.loginPage}>
+    //   <Window>
+    //     {isAvailable === null ? (
+    //       <div />
+    //     ) : (
+    //       <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+    //         {signinPending ? (
+    //         ) : authMethods === null ||
+    //           (isAvailable && authMethods.passkey && !authMethods.password) ? (
+    //           <Button
+    //             label={
+    //               authMethods === null ? 'Sign in' : 'Sign in with passkey'
+    //             }
+    //             onClick={checkAuthMethods}
+    //           />
+    //         ) : (authMethods.password && !authMethods.passkey) ||
+    //           !isAvailable ? (
+    //           <Button
+    //             label="Sign in with password"
+    //             onClick={signinWithPassword}
+    //           />
+    //         ) : authMethods.password && authMethods.passkey && isAvailable ? (
+    //           <div className={styles.buttons}>
+    //             <Button
+    //               label="Sign in with passkey"
+    //               onClick={signinWithPasskey}
+    //             />
+    //             <Button
+    //               label="Sign in with password"
+    //               onClick={signinWithPassword}
+    //             />
+    //           </div>
+    //         ) : null}
+    //         {!registrationEnabled ? null : (
+    //           <Link href="/signup">
+    //             <p>Don&apos;t have an account? Sign up</p>
+    //           </Link>
+    //         )}
+    //       </form>
+    //     )}
+    //   </Window>
+    // </section>
   );
 }
 
