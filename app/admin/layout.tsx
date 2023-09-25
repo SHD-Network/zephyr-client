@@ -1,7 +1,7 @@
 'use client';
 
 import { useUserSettings } from '@/redux';
-import styles from '@/styles/Layouts/SettingsLayout.module.scss';
+import { Badge, Container, Flex } from '@mantine/core';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
@@ -27,35 +27,37 @@ function AdminLayout({ children }: SettingsLayoutProps) {
   }, [pathname, isAdmin, pathnameChange]);
 
   return (
-    <div className={styles.settingsLayout}>
-      <div className={styles.chips}>
-        <Link
-          href="/admin"
-          className={`${styles.chip} ${
-            pathname === '/admin' ? styles.active : ''
-          }`}
-        >
-          System
+    <Container fluid>
+      <Flex gap="xs" mb="md">
+        <Link href="/admin">
+          <Badge
+            variant={pathname === '/admin' ? 'filled' : 'outline'}
+            size="lg"
+          >
+            System
+          </Badge>
         </Link>
-        <Link
-          href="/admin/modules"
-          className={`${styles.chip} ${
-            pathname.startsWith('/admin/modules') ? styles.active : ''
-          }`}
-        >
-          Modules
+        <Link href="/admin/modules">
+          <Badge
+            variant={
+              pathname.startsWith('/admin/modules') ? 'filled' : 'outline'
+            }
+            size="lg"
+          >
+            Modules
+          </Badge>
         </Link>
-        <Link
-          href="/admin/users"
-          className={`${styles.chip} ${
-            pathname.startsWith('/admin/users') ? styles.active : ''
-          }`}
-        >
-          Users
+        <Link href="/admin/users">
+          <Badge
+            variant={pathname.startsWith('/admin/users') ? 'filled' : 'outline'}
+            size="lg"
+          >
+            Users
+          </Badge>
         </Link>
-      </div>
+      </Flex>
       {children}
-    </div>
+    </Container>
   );
 }
 

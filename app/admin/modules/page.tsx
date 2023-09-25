@@ -3,6 +3,7 @@ import { Toggle } from '@/components';
 import { statusController } from '@/lib/api/StatusController';
 import { useAppSettings } from '@/redux';
 import styles from '@/styles/Pages/Admin.module.scss';
+import { Flex, Stack, Switch, Title } from '@mantine/core';
 import { useCallback, useEffect } from 'react';
 
 function Modules() {
@@ -24,7 +25,7 @@ function Modules() {
   }, [loadPage]);
 
   return (
-    <section className={styles.modules}>
+    <Stack gap="xs">
       <Module
         name="Calendar"
         keyValue="calendar"
@@ -103,7 +104,7 @@ function Modules() {
         status={modules.wiki}
         onChange={toggleModule}
       />
-    </section>
+    </Stack>
   );
 }
 
@@ -116,10 +117,17 @@ type ModuleProps = {
 
 function Module({ name, status, onChange, keyValue }: ModuleProps) {
   return (
-    <div className={styles.module}>
-      <h3>{name}</h3>
-      <Toggle value={status} onChange={() => onChange(keyValue, !status)} />
-    </div>
+    <Flex
+      w="100%"
+      align="center"
+      justify="space-between"
+      bg="dark"
+      px="md"
+      py="sm"
+    >
+      <Title order={4}>{name}</Title>
+      <Switch checked={status} onChange={() => onChange(keyValue, !status)} />
+    </Flex>
   );
 }
 

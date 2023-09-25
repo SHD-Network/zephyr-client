@@ -237,6 +237,7 @@ class AuthController extends ApiController {
 
   public async logout() {
     const response = await this.delete<LogoutResponse>('auth/logout');
+    localStorage.removeItem('zsn');
     return response;
   }
 }
